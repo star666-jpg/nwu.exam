@@ -1,80 +1,124 @@
 %!TeX program = xelatex
 \documentclass{../nwu-exam}
 
+% ==========================================
+% 1. 试卷信息配置 (Header Info)
+% ==========================================
+\SetTerm{西北大学 2021 ---- 2022 学年第一学期}
+\SetSubject{数学分析}
+\SetPaperType{B}       % 设置为 B 卷
+\SetDept{数学学院}     % 出题院系
+
 \begin{document}
-	\section{智能排版与计分测试}
+	% 生成试卷表头
+	\MakePaperHeader
 	
-	\begin{question}[4]
-		第一题...
-		\xx{A}{B}{C}{D}
+	% ==========================================
+	% 第一部分：填空题
+	% ==========================================
+	\section{填空题（每小题 5 分，共 30 分）}
+	
+	\begin{question}[5]
+		计算积分：$\int_{0}^{1}dy\int_{y}^{\sqrt{y}}\frac{\sin x}{x}dx = $ \fillin[][3cm].
 	\end{question}
 	
-	\begin{question}[2.5]
-		第二题...
-		\xx{A}{B}{C}{D}
+	\begin{question}[5]
+		设 $I(y)=\int_{0}^{y}\frac{\ln(1+xy)}{x}dx \quad (y>0)$，则 $I'(2) = $ \fillin[][3cm].
 	\end{question}
 	
-	\begin{question}
-		第三题(0分)...
-		\xx{A}{B}{C}{D}
+	\begin{question}[5]
+		设平面曲线 $L$ 为 $y=\sqrt{4-x^{2}}$，则 $\oint_{L}(x^{2}+y^{2}+1)ds = $ \fillin[][3cm].
 	\end{question}
 	
-
-	% ... 前面的代码 ...
-	
-	\begin{question}[3]
-		这是一个填空题测试：
-		勾股定理的公式是 $a^2 + b^2 = $ \fillin[c^2][2cm]。
-		若 $a=3, b=4$，则 $c=$ \fillin[5]。
+	\begin{question}[5]
+		设 $\Sigma$ 为球面 $x^{2}+y^{2}+z^{2}=1$，则 $\oint_{\Sigma}\sin x\cdot \sin y\cdot \sin z \, dS = $ \fillin[][3cm].
 	\end{question}
 	
-	\begin{question}
-		这是一个大题（总分不写，由小题累加）：
-		\qpart[2] 第一小题（2分），请计算...
-		\qpart[3] 第二小题（3分），请证明...
-		\qpart 第三小题（0分），不计分步骤...
-	\end{question}
-	% ... 之前的题目 ...
-	
-	% --- 判断题测试 ---
-	\begin{question}[3]
-		判断下列命题是否正确：
-		% T表示对, F表示错. 开启教师模式后会显示对钩/叉号
-		\qpart[1] 函数 $y=x^2$ 是奇函数。 \tf[F]
-		\qpart[1] $\sqrt{4} = \pm 2$。 \tf[F]
-		\qpart[1] 三角形内角和为 $180^\circ$。 \tf[T]
+	\begin{question}[5]
+		平面有界点集 $D$ 可求面积的充分必要条件是 \fillin[][6cm].
 	\end{question}
 	
-	% --- 计算题测试 ---
+	\begin{question}[5]
+		设 $D=\{(x,y)|x^{2}+y^{2}\ge1\}$。当 $p$ \fillin[][2cm] 时，反常重积分 $\iint_{D}\frac{1}{(x^{2}+y^{2})^{p}}dxdy$ 收敛。
+	\end{question}
+	
+	% ==========================================
+	% 第二部分：计算题
+	% ==========================================
+	\section{计算题（每小题 10 分，共 50 分）}
+	
 	\begin{question}[10]
-		求函数 $f(x) = x^3 - 3x$ 的极值。
-		\sol % 自动生成 "解："
-		求导可得 $f'(x) = 3x^2 - 3$。
-		
-		令 $f'(x)=0$，解得 $x=\pm 1$。
-		
-		\vspace{2cm} % 留出做题空间
-		
-		所以，极大值为 $f(-1)=2$，极小值为 $f(1)=-2$。
+		求二重积分 $\iint_{D}\frac{1}{(x^{2}+y^{2})^{2}}dxdy$，其中 $D=\{(x,y)|x^{2}+y^{2}\le 2x, x\ge 1\}$。
+		\sol
+		\par \vspace{5cm} % 留出答题空间
 	\end{question}
 	
-	% --- 证明题测试 ---
-	\begin{question}[12]
-		已知 $a > 0, b > 0$，求证：$\frac{a+b}{2} \ge \sqrt{ab}$。
-		\zm % 自动生成 "证明："
-		因为 $(\sqrt{a} - \sqrt{b})^2 \ge 0$，
-		
-		展开得 $a - 2\sqrt{ab} + b \ge 0$，
-		
-		移项得 $a + b \ge 2\sqrt{ab}$，
-		
-		所以 $\frac{a+b}{2} \ge \sqrt{ab}$。
+	\begin{question}[10]
+		计算由曲面 $\frac{x^{2}}{a^{2}}+\frac{y^{2}}{b^{2}}+\frac{z^{2}}{c^{2}}=1$ 所围空间立体的体积。
+		\sol
+		\par \vspace{5cm}
 	\end{question}
 	
-	% ... MakeGradingTable ...
-	% --- 生成得分表 ---
-    \section*{阅卷统计}
-     这里是自动生成的得分表：
-
-\MakeGradingTable
+	\begin{question}[10]
+		设 $L$ 是单位圆周 $x^{2}+y^{2}=1$（取逆时针方向），计算曲线积分：
+		\[ \oint_{L}\frac{(x-y)dx+(x+4y)dy}{x^{2}+4y^{2}} \]
+		\sol
+		\par \vspace{5cm}
+	\end{question}
+	
+	\begin{question}[10]
+		设 $\Sigma$ 为曲面 $x^{2}+z^{2}=4-y$ 且 $y\ge 0$ 的那部分的上侧，计算曲面积分：
+		\[ \iint_{\Sigma} yz \, dydz + (x^{2}+z^{2})y \, dzdx + xy \, dxdy \]
+		\sol
+		\par \vspace{5cm}
+	\end{question}
+	
+	\begin{question}[10]
+		设球面的半径为 $R$，球心在球面 $x^{2}+y^{2}+z^{2}=a^{2}$ 上。问 $R$ 当取何值时，该球面在球面 $x^{2}+y^{2}+z^{2}=a^{2}$ 内部的面积最大？并求最大面积。
+		\sol
+		\par \vspace{6cm}
+	\end{question}
+	
+	% ==========================================
+	% 第三部分：证明题
+	% ==========================================
+	\section{证明题（每小题 10 分，共 20 分）}
+	
+	\begin{question}[10]
+		证明：$F(y)=\int_{0}^{+\infty}\frac{\sin xy}{x}dx$ 在 $(0,+\infty)$ 上不一致收敛，但在 $(0,+\infty)$ 上连续。
+		\zm
+		\par \vspace{6cm}
+	\end{question}
+	
+	\begin{question}[10]
+		证明：$\int_{0}^{+\infty}e^{-x^{2}}dx=\frac{\sqrt{\pi}}{2}$。
+		\zm
+		\par \vspace{6cm}
+	\end{question}
+	
+	% ==========================================
+	% 第四部分：选做题
+	% ==========================================
+	\section{选做题（附加题）}
+	
+	\begin{question}
+		设 $P(x,y), Q(x,y)$ 在光滑曲线 $L$ 上连续，$K$ 为 $L$ 的长度，且 $M=\max_{(x,y)\in L}\sqrt{P^{2}+Q^{2}}$。
+		\par
+		(1) 证明: $\left|\int_{L}P(x,y)dx+Q(x,y)dy\right| \le M\cdot K$。
+		\par
+		(2) 证明: $\lim_{R\rightarrow+\infty}\int_{L_{R}}\frac{ydx-xdy}{(x^{2}+xy+y^{2})^{2}}=0$，其中 $L_{R}$ 为圆周 $x^{2}+y^{2}=R^{2}$。
+		\zm
+		\par \vspace{5cm}
+	\end{question}
+	
+	\begin{question}
+		设 $u(x,y)$ 具有二阶连续偏导数，$\frac{\partial u}{\partial n}$ 为沿外法线方向的方向导数。证明：$u$ 是调和函数的充分必要条件为对 $D$ 中任意光滑封闭曲线 $L$，有
+		\[ \oint_{L}\frac{\partial u}{\partial n}ds = 0 \]
+		\zm
+		\par \vspace{5cm}
+	\end{question}
+	
+	% 生成得分统计表
+	\MakeGradingTable
+	
 \end{document}

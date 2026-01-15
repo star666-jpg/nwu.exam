@@ -1,0 +1,27 @@
+%% nwu-exam.ins
+%% Copyright (C) 2025 by NWU-Exam Team
+%% 运行 'latex nwu-exam.ins' 将从 dtx 生成 cls 文件
+
+\input docstrip.tex
+\keepsilent
+\askforoverwritefalse
+
+\preamble
+
+This is a generated file.
+Copyright (C) 2025 by NWU-Exam Team
+
+\endpreamble
+
+\generate{
+	% 定义从 dtx 中提取 class 标签的内容生成 nwu-exam.cls
+	\file{nwu-exam.cls}{\from{nwu-exam.dtx}{class}}
+}
+
+\obeyspaces
+\Msg{****************************************************}
+\Msg{* Installation complete. Move nwu-exam.cls to your *}
+\Msg{* TeX search path or keep it in the working folder.*}
+\Msg{****************************************************}
+
+\endbatchfile

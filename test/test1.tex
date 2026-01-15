@@ -1,14 +1,26 @@
 %!TeX program = xelatex
-\documentclass{../nwu-exam} % 指向上一级目录的 .cls 文件
+\documentclass{../nwu-exam}
 
 \begin{document}
-	% 这里是正文，应该能看到左边的密封线
-	\section{测试试卷}
-	你好，这是基于 nwu-exam 生成的第一张试卷。
+	\section{智能排版与计分测试}
 	
-	\vspace{10cm} % 占位，强行撑开页面
+	% 使用自动环境，带分值
+	\begin{question}[4]
+		这是第一道自动编号的题目（应该显示4分）。
+		\xx{选项A}{选项B}{选项C}{选项D}
+	\end{question}
 	
-	下一页测试...
-	\newpage
-	第二页也应该有密封线。
+	\begin{question}[2.5]
+		这是支持小数分值的题目（2.5分），测试总分计算。
+		\xx{Short}{Short}{Longer option here}{Longer option here}
+	\end{question}
+	
+	\begin{question}
+		这是一道不设分值的题目（不会显示分数括号）。
+		\xx{垂直排列测试}{垂直排列测试}{垂直排列测试}{垂直排列测试}
+	\end{question}
+	
+	% 显示总分 (应该等于 4 + 2.5 = 6.5)
+	\ShowTotalScore
+	
 \end{document}

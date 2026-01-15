@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.10.28)  15 JAN 2026 20:06
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.10.28)  15 JAN 2026 20:24
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -546,7 +546,16 @@ File: pgfmodulematrix.code.tex 2023-01-15 v3.1.10 (3.1.10)
 (e:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzli
 brarytopaths.code.tex
 File: tikzlibrarytopaths.code.tex 2023-01-15 v3.1.10 (3.1.10)
-)))) (./test1.aux)
+)))
+\l_nwu_choice_max_width_dim=\dimen293
+\l_nwu_line_width_dim=\dimen294
+\l_nwu_choice_a_box=\box67
+\l_nwu_choice_b_box=\box68
+\l_nwu_choice_c_box=\box69
+\l_nwu_choice_d_box=\box70
+\c@question=\count322
+\c@nwu_part_cnt=\count323
+) (./test1.aux)
 \openout1 = `test1.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 4.
@@ -688,7 +697,7 @@ Package fontspec Info:
 
 
 LaTeX Font Warning: Font shape `TU/SimHei(0)/b/n' undefined
-(Font)              using `TU/SimHei(0)/m/n' instead on input line 12.
+(Font)              using `TU/SimHei(0)/m/n' instead on input line 26.
 
 
 Package fontspec Info: 
@@ -717,16 +726,14 @@ Package fontspec Info:
 (fontspec)             <->"SimSun/OT:script=hani;language=dflt;"
 
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.53937> on input line 12.
+(Font)              <10.53937> on input line 26.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 12.
+(Font)              <7> on input line 26.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 12.
+(Font)              <5> on input line 26.
 [1
 
-]
-
-[2] (./test1.aux)
+] (./test1.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2022/07/14>
@@ -737,12 +744,12 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 17490 strings out of 473832
- 424429 string characters out of 5733157
- 805715 words of memory out of 5000000
- 40266 multiletter control sequences out of 15000+600000
- 561101 words of font info for 72 fonts, out of 8000000 for 9000
+ 17563 strings out of 473832
+ 427684 string characters out of 5733157
+ 810068 words of memory out of 5000000
+ 40341 multiletter control sequences out of 15000+600000
+ 561093 words of font info for 71 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 117i,12n,125p,410b,873s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 117i,12n,125p,410b,871s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on test1.pdf (2 pages).
+Output written on test1.pdf (1 page).

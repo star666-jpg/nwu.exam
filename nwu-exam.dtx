@@ -1,0 +1,97 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2025 by NWU-Exam Team
+%
+% \fi
+%
+% \iffalse
+%<*driver>
+\documentclass{l3doc}
+\usepackage[UTF8, scheme=plain]{ctex} 
+\usepackage{tikz}
+\usepackage{eso-pic}
+\usepackage{geometry}
+\geometry{a4paper, left=3cm} 
+
+\EnableCrossrefs
+\CodelineIndex
+\RecordChanges
+
+\begin{document}
+	\DocInput{nwu-exam.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% \title{The \textsf{nwu-exam} class \\ 西北大学试卷排版系统}
+% \author{NWU-Exam Team}
+% \date{\today}
+% \maketitle
+%
+% \section{核心实现}
+%
+%    \begin{macrocode}
+%<*class>
+\NeedsTeXFormat{LaTeX2e}
+\RequirePackage{expl3}
+\ProvidesExplClass{nwu-exam}{2025/06/01}{0.1}{NWU Exam Class}
+
+% 1. 加载基础模块
+\LoadClass[a4paper,11pt]{article}
+\RequirePackage{geometry}
+\RequirePackage[scheme=plain]{ctex} 
+\RequirePackage{eso-pic}
+\RequirePackage{tikz}
+
+% =========== 关键修复点 ============
+% 暂时关闭 expl3 语法，防止 TikZ 的 current page 被吃掉空格
+\ExplSyntaxOff 
+
+% 2. 密封线模块
+\newcommand{\DrawSealedLine}{%
+	\AddToShipoutPictureBG{%
+		\begin{tikzpicture}[remember picture, overlay]
+		% 样式定义
+		\tikzset{sealed/.style={dashed, color=black!60, line width=0.8pt}}
+		\tikzset{textstyle/.style={rotate=90, anchor=center, color=black}}
+		
+		% A. 绘制双轨虚线
+		\draw[sealed] ([xshift=1.5cm]current page.south west) -- ([xshift=1.5cm]current page.north west);
+		\draw[sealed] ([xshift=1.8cm]current page.south west) -- ([xshift=1.8cm]current page.north west);
+		
+		% B. 绘制“密封线”大字
+		\node[textstyle] at ([xshift=1.65cm]current page.west) {
+			\zihao{4}\heiti\bfseries 
+			\quad 密 \qquad 封 \qquad 线 \quad
+		};
+		
+		% C. 绘制考生信息
+		\node[textstyle, anchor=east] at ([xshift=1.3cm, yshift=6cm]current page.west) {
+			\zihao{5}\songti 姓~~名：\underline{\makebox[3cm]{}}
+		};
+		\node[textstyle, anchor=east] at ([xshift=1.3cm, yshift=0cm]current page.west) {
+			\zihao{5}\songti 学~~号：\underline{\makebox[3cm]{}}
+		};
+		\node[textstyle, anchor=east] at ([xshift=1.3cm, yshift=-6cm]current page.west) {
+			\zihao{5}\songti 专~~业：\underline{\makebox[3cm]{}}
+		};
+		
+		% D. 顶部提示
+		\node[rotate=90, anchor=west, font=\footnotesize] at ([xshift=1.2cm, yshift=-13cm]current page.west) {
+			(请考生在密封线内填写个人信息，密封线外作答无效)
+		};
+		
+		\end{tikzpicture}%
+	}%
+}
+
+% 默认启用
+\AtBeginDocument{\DrawSealedLine}
+
+% 重新开启 expl3 语法以编写后续逻辑
+\ExplSyntaxOn
+
+\msg_new:nnn { nwu-exam } { welcome } { Engine~Online. }
+
+%</class>
+%    \end{macrocode}

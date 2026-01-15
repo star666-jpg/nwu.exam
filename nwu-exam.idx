@@ -1,0 +1,37 @@
+\indexentry{NeedsTeXFormat={\verbatim@font !\verb*&!\NeedsTeXFormat&}|hdclindex{2}{}}{MMMMV-2-MMMD-2-M}
+\indexentry{RequirePackage={\verbatim@font !\verb*&!\RequirePackage&}|hdclindex{3}{}}{MMMMV-3-MMMD-3-M}
+\indexentry{ProvidesExplClass={\verbatim@font !\verb*&!\ProvidesExplClass&}|hdclindex{4}{}}{MMMMV-4-MMMD-4-M}
+\indexentry{LoadClass={\verbatim@font !\verb*&!\LoadClass&}|hdclindex{7}{}}{MMMMV-7-MMMD-7-M}
+\indexentry{RequirePackage={\verbatim@font !\verb*&!\RequirePackage&}|hdclindex{8}{}}{MMMMV-8-MMMD-8-M}
+\indexentry{RequirePackage={\verbatim@font !\verb*&!\RequirePackage&}|hdclindex{9}{}}{MMMMV-9-MMMD-9-M}
+\indexentry{ExplSyntaxOn={\verbatim@font !\verb*&!\ExplSyntaxOn&}|hdclindex{11}{}}{MMMMV-11-MMMD-11-M}
+\indexentry{msg commands:=\pkg{msg} commands:>msg_new:nnn={\verbatim@font !\verb*&!\msg&!\_!\verb*&new:nnn&}|hdclindex{12}{}}{MMMMV-12-MMMD-12-M}
+\indexentry{msg commands:=\pkg{msg} commands:>msg_warning:nn={\verbatim@font !\verb*&!\msg&!\_!\verb*&warning:nn&}|hdclindex{15}{}}{MMMMV-15-MMMD-15-M}
+\indexentry{RequirePackage={\verbatim@font !\verb*&!\RequirePackage&}|hdclindex{17}{}}{MMMMV-17-MMMD-17-M}
+\indexentry{RequirePackage={\verbatim@font !\verb*&!\RequirePackage&}|hdclindex{18}{}}{MMMMV-18-MMMD-18-M}
+\indexentry{cs commands:=\pkg{cs} commands:>cs_new:Nn={\verbatim@font !\verb*&!\cs&!\_!\verb*&new:Nn&}|hdclindex{21}{}}{MMMMV-21-MMMD-21-M}
+\indexentry{nwu commands:=\pkg{nwu} commands:>nwu_draw_sealed_line:={\verbatim@font !\verb*&!\nwu&!\_!\verb*&draw&!\_!\verb*&sealed&!\_!\verb*&line:&}|hdclindex{21}{}}{MMMMV-21-MMMD-21-M}
+\indexentry{AddToShipoutPictureBG={\verbatim@font !\verb*&!\AddToShipoutPictureBG&}|hdclindex{22}{}}{MMMMV-22-MMMD-22-M}
+\indexentry{begin={\verbatim@font !\verb*&!\begin&}|hdclindex{23}{}}{MMMMV-23-MMMD-23-M}
+\indexentry{node={\verbatim@font !\verb*&!\node&}|hdclindex{25}{}}{MMMMV-25-MMMD-25-M}
+\indexentry{begin={\verbatim@font !\verb*&!\begin&}|hdclindex{26}{}}{MMMMV-26-MMMD-26-M}
+\indexentry{draw={\verbatim@font !\verb*&!\draw&}|hdclindex{28}{}}{MMMMV-28-MMMD-28-M}
+\indexentry{node={\verbatim@font !\verb*&!\node&}|hdclindex{31}{}}{MMMMV-31-MMMD-31-M}
+\indexentry{zihao={\verbatim@font !\verb*&!\zihao&}|hdclindex{32}{}}{MMMMV-32-MMMD-32-M}
+\indexentry{bfseries={\verbatim@font !\verb*&!\bfseries&}|hdclindex{32}{}}{MMMMV-32-MMMD-32-M}
+\indexentry{quad={\verbatim@font !\verb*&!\quad&}|hdclindex{32}{}}{MMMMV-32-MMMD-32-M}
+\indexentry{quad={\verbatim@font !\verb*&!\quad&}|hdclindex{32}{}}{MMMMV-32-MMMD-32-M}
+\indexentry{node={\verbatim@font !\verb*&!\node&}|hdclindex{36}{}}{MMMMV-36-MMMD-36-M}
+\indexentry{zihao={\verbatim@font !\verb*&!\zihao&}|hdclindex{37}{}}{MMMMV-37-MMMD-37-M}
+\indexentry{underline={\verbatim@font !\verb*&!\underline&}|hdclindex{38}{}}{MMMMV-38-MMMD-38-M}
+\indexentry{makebox={\verbatim@font !\verb*&!\makebox&}|hdclindex{38}{}}{MMMMV-38-MMMD-38-M}
+\indexentry{quad={\verbatim@font !\verb*&!\quad&}|hdclindex{38}{}}{MMMMV-38-MMMD-38-M}
+\indexentry{underline={\verbatim@font !\verb*&!\underline&}|hdclindex{39}{}}{MMMMV-39-MMMD-39-M}
+\indexentry{makebox={\verbatim@font !\verb*&!\makebox&}|hdclindex{39}{}}{MMMMV-39-MMMD-39-M}
+\indexentry{quad={\verbatim@font !\verb*&!\quad&}|hdclindex{39}{}}{MMMMV-39-MMMD-39-M}
+\indexentry{underline={\verbatim@font !\verb*&!\underline&}|hdclindex{40}{}}{MMMMV-40-MMMD-40-M}
+\indexentry{makebox={\verbatim@font !\verb*&!\makebox&}|hdclindex{40}{}}{MMMMV-40-MMMD-40-M}
+\indexentry{end={\verbatim@font !\verb*&!\end&}|hdclindex{42}{}}{MMMMV-42-MMMD-42-M}
+\indexentry{end={\verbatim@font !\verb*&!\end&}|hdclindex{44}{}}{MMMMV-44-MMMD-44-M}
+\indexentry{nwu commands:=\pkg{nwu} commands:>nwu_draw_sealed_line:={\verbatim@font !\verb*&!\nwu&!\_!\verb*&draw&!\_!\verb*&sealed&!\_!\verb*&line:&}|hdclindex{49}{}}{MMMMV-49-MMMD-49-M}
+\indexentry{ExplSyntaxOff={\verbatim@font !\verb*&!\ExplSyntaxOff&}|hdclindex{49}{}}{MMMMV-49-MMMD-49-M}

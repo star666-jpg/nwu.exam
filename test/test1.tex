@@ -4,23 +4,25 @@
 \begin{document}
 	\section{智能排版与计分测试}
 	
-	% 使用自动环境，带分值
 	\begin{question}[4]
-		这是第一道自动编号的题目（应该显示4分）。
-		\xx{选项A}{选项B}{选项C}{选项D}
+		第一题...
+		\xx{A}{B}{C}{D}
 	\end{question}
 	
 	\begin{question}[2.5]
-		这是支持小数分值的题目（2.5分），测试总分计算。
-		\xx{Short}{Short}{Longer option here}{Longer option here}
+		第二题...
+		\xx{A}{B}{C}{D}
 	\end{question}
 	
 	\begin{question}
-		这是一道不设分值的题目（不会显示分数括号）。
-		\xx{垂直排列测试}{垂直排列测试}{垂直排列测试}{垂直排列测试}
+		第三题(0分)...
+		\xx{A}{B}{C}{D}
 	\end{question}
 	
-	% 显示总分 (应该等于 4 + 2.5 = 6.5)
-	\ShowTotalScore
+	% --- 生成得分表 ---
+	\section*{阅卷统计}
+	这里是自动生成的得分表：
+	
+	\MakeGradingTable
 	
 \end{document}

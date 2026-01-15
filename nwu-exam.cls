@@ -158,42 +158,62 @@
 }% =======================================================
 
 \newcounter{question}
-\newcounter{nwu_part_cnt}[question] % 让小题号随大题自动重置
-
+\newcounter{nwu_part_cnt}[question]
 \fp_new:N \g_nwu_total_points_fp
 \fp_new:N \l_nwu_current_points_fp
+
+\seq_new:N \g_nwu_score_seq
 
 \NewDocumentEnvironment{question}{ O{0} }
 {
 \refstepcounter{question}
-
 \fp_set:Nn \l_nwu_current_points_fp { #1 }
 \fp_gadd:Nn \g_nwu_total_points_fp { \l_nwu_current_points_fp }
 
-\par \vspace{1em} % 题间距
+\fp_compare:nNnTF { \l_nwu_current_points_fp } > { 0 }
+{ \seq_gput_right:Ne \g_nwu_score_seq { \fp_to_decimal:N \l_nwu_current_points_fp } }
+{ \seq_gput_right:Nn \g_nwu_score_seq { - } }
+
+\par \vspace{1em}
 \noindent
 \textbf{\thequestion .}~
-
 \fp_compare:nNnTF { \l_nwu_current_points_fp } > { 0 }
 { \textbf{ ( \fp_to_decimal:N \l_nwu_current_points_fp ~ 分 ) } ~ }
 { }
-
 \ignorespaces
 }
-{
-\par
-}
+{ \par }
 
 \NewDocumentCommand{\qpart}{ }{
 \stepcounter{nwu_part_cnt}
 \par \vspace{0.3em}
-\hspace{2em}
-(\alph{nwu_part_cnt})~
+\hspace{2em} (\alph{nwu_part_cnt})~
 }
 
-\NewDocumentCommand{\ShowTotalScore}{ }{
-\par \vspace{1em} \noindent
-\fbox{ \bfseries 当前试卷总分：\fp_to_decimal:N \g_nwu_total_points_fp }
+\NewDocumentCommand{\MakeGradingTable}{ }{
+\par \vspace{2em}
+\begin{center}
+\renewcommand{\arraystretch}{1.5} % 表格行高
+\setlength{\tabcolsep}{10pt}      % 列宽宽松点
+
+\begin{tabular}{ | c | *{\seq_count:N \g_nwu_score_seq}{c|} c | }
+\hline
+\textbf{题号}
+\int_step_inline:nn { \seq_count:N \g_nwu_score_seq } { & \textbf{##1} }
+& \textbf{总分} \\
+\hline
+
+\textbf{分值}
+\seq_map_inline:Nn \g_nwu_score_seq { & ##1 }
+& \fp_to_decimal:N \g_nwu_total_points_fp \\
+\hline
+
+\textbf{得分}
+\int_step_inline:nn { \seq_count:N \g_nwu_score_seq } { & }
+& \\
+\hline
+\end{tabular}
+\end{center}
 }
 \endinput
 %%

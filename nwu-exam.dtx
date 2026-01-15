@@ -203,59 +203,84 @@
 	\nwu_choices:nnnn {#1} {#2} {#3} {#4}
 }% =======================================================
 % =======================================================
-% 4. 题目与评分模块 (Question & Grading Module) - 修正版
+% =======================================================
+% 4. 题目与评分模块 (Question & Grading Module) - V2.0
 % =======================================================
 
 % --- 变量定义 ---
-% 使用标准 LaTeX 计数器，以便支持子编号重置机制
 \newcounter{question} 
-\newcounter{nwu_part_cnt}[question] % 让小题号随大题自动重置
-
-% 全局总分 (依然使用 expl3 浮点数，因为要算 0.5 分)
+\newcounter{nwu_part_cnt}[question] 
 \fp_new:N \g_nwu_total_points_fp 
 \fp_new:N \l_nwu_current_points_fp
 
+% 新增：分数序列 (用于存储每道题的分值)
+\seq_new:N \g_nwu_score_seq 
+
 % --- 题目环境 (question) ---
-% 语法: \begin{question}[分值] ... \end{question}
 \NewDocumentEnvironment{question}{ O{0} }
 {
-	% 1. 计数器自增 (使用 refstepcounter 以支持交叉引用)
 	\refstepcounter{question}
-	
-	% 2. 处理分值
 	\fp_set:Nn \l_nwu_current_points_fp { #1 }
 	\fp_gadd:Nn \g_nwu_total_points_fp { \l_nwu_current_points_fp }
 	
-	% 3. 排版逻辑
-	\par \vspace{1em} % 题间距
-	\noindent
-	% 题号部分 (加粗，使用标准计数器输出)
-	\textbf{\thequestion .}~
+	% 新增：将当前分数写入序列 (记录下来！)
+	% 如果是0分，为了表格好看，我们也记录为 "-" 或 "0"
+	\fp_compare:nNnTF { \l_nwu_current_points_fp } > { 0 }
+	{ \seq_gput_right:Ne \g_nwu_score_seq { \fp_to_decimal:N \l_nwu_current_points_fp } }
+	{ \seq_gput_right:Nn \g_nwu_score_seq { - } }
 	
-	% 如果有分值，显示分值
+	% 排版逻辑
+	\par \vspace{1em} 
+	\noindent
+	\textbf{\thequestion .}~
 	\fp_compare:nNnTF { \l_nwu_current_points_fp } > { 0 }
 	{ \textbf{ ( \fp_to_decimal:N \l_nwu_current_points_fp ~ 分 ) } ~ }
 	{ } 
-	
 	\ignorespaces
 }
-{
-	\par 
-}
+{ \par }
 
-% --- 小题环境 (part) ---
-% 简单的字母编号 (a), (b)...
+% --- 小题环境 ---
 \NewDocumentCommand{\qpart}{ }{
 	\stepcounter{nwu_part_cnt}
 	\par \vspace{0.3em}
-	\hspace{2em} 
-	(\alph{nwu_part_cnt})~
+	\hspace{2em} (\alph{nwu_part_cnt})~
 }
 
-% --- 临时功能：显示总分 ---
-\NewDocumentCommand{\ShowTotalScore}{ }{
-	\par \vspace{1em} \noindent
-	\fbox{ \bfseries 当前试卷总分：\fp_to_decimal:N \g_nwu_total_points_fp }
+% --- 动态得分表生成引擎 (核心算法) ---
+\NewDocumentCommand{\MakeGradingTable}{ }{
+	\par \vspace{2em}
+	\begin{center}
+		% 使用简单的 array 语法，动态计算列数
+		% 结构：| 题号 | 1 | 2 | ... | 总分 |
+		\renewcommand{\arraystretch}{1.5} % 表格行高
+		\setlength{\tabcolsep}{10pt}      % 列宽宽松点
+		
+		% 开始绘制表格
+		% 注意：这里用了一个技巧，先计算有多少道题，生成对应数量的 c|
+		\begin{tabular}{ | c | *{\seq_count:N \g_nwu_score_seq}{c|} c | }
+			\hline
+			% 第一行：表头 (题号)
+			\textbf{题号} 
+			% 循环输出 1, 2, 3 ...
+			\int_step_inline:nn { \seq_count:N \g_nwu_score_seq } { & \textbf{##1} }
+			& \textbf{总分} \\
+			\hline
+			
+			% 第二行：分值
+			\textbf{分值}
+			% 遍历序列，输出存储的分数
+			\seq_map_inline:Nn \g_nwu_score_seq { & ##1 }
+			& \fp_to_decimal:N \g_nwu_total_points_fp \\
+			\hline
+			
+			% 第三行：得分 (留空给老师打分)
+			\textbf{得分}
+			\int_step_inline:nn { \seq_count:N \g_nwu_score_seq } { & }
+			& \\
+			\hline
+		\end{tabular}
+	\end{center}
 }
 %</class>
 %    \end{macrocode}

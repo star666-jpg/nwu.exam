@@ -11,9 +11,34 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}
 \RequirePackage{expl3}
-\ProvidesExplClass{nwu-exam}{2025/06/01}{0.7}{NWU Exam Class Final}
+\RequirePackage{l3keys2e} % 关键：用于处理类选项
+\ProvidesExplClass{nwu-exam}{2025/06/01}{1.0}{NWU Exam Class Dynamic Layout}
 
-\LoadClass[a4paper,11pt]{article}
+\ExplSyntaxOn
+
+\bool_new:N \g_nwu_sealed_bool     % 是否开启密封线
+\bool_new:N \g_nwu_twoside_bool    % 是否双面打印
+
+\keys_define:nn { nwu / options }
+{
+sealed .bool_set:N = \g_nwu_sealed_bool,
+sealed .default:n = true,
+sealed .initial:n = true, % 默认开启
+
+twoside .bool_set:N = \g_nwu_twoside_bool,
+twoside .default:n = true,
+twoside .initial:n = false, % 默认单面(都在左侧)
+}
+
+\ProcessKeysOptions { nwu / options }
+
+\DeclareOption*{ \PassOptionsToClass{\CurrentOption}{article} }
+\ProcessOptions\relax
+
+\LoadClass{article} % 去掉了默认的 a4paper，由用户决定
+
+\ExplSyntaxOff
+
 \RequirePackage{geometry}
 \RequirePackage[scheme=plain]{ctex}
 \RequirePackage{eso-pic}
@@ -22,9 +47,24 @@
 \RequirePackage{amsmath, amssymb}
 \RequirePackage{array}
 \RequirePackage{lastpage}
-\RequirePackage{chngcntr} % 关键：用于大题重新计数
+\RequirePackage{chngcntr}
+\RequirePackage{titlesec}
+\RequirePackage{ifoddpage} % 用于检测奇偶页
 
-\geometry{left=2.5cm, right=2cm, top=2.5cm, bottom=3.0cm}
+\ExplSyntaxOn
+\bool_if:NTF \g_nwu_sealed_bool
+{
+\geometry{left=3.0cm, right=2.0cm, top=2.5cm, bottom=3.0cm}
+}
+{
+\geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=3.0cm}
+}
+
+\bool_if:NT \g_nwu_twoside_bool
+{
+\geometry{twoside}
+}
+\ExplSyntaxOff
 
 \ExplSyntaxOn
 
@@ -32,25 +72,24 @@
 \tl_new:N \g_nwu_subject_tl
 \tl_new:N \g_nwu_paper_type_tl
 \tl_new:N \g_nwu_department_tl
-\tl_new:N \g_nwu_date_tl       % 新增：考试日期
+\tl_new:N \g_nwu_date_tl
 
 \NewDocumentCommand{\SetTerm}{m}{ \tl_gset:Nn \g_nwu_term_tl {#1} }
 \NewDocumentCommand{\SetSubject}{m}{ \tl_gset:Nn \g_nwu_subject_tl {#1} }
 \NewDocumentCommand{\SetPaperType}{m}{ \tl_gset:Nn \g_nwu_paper_type_tl {#1} }
 \NewDocumentCommand{\SetDept}{m}{ \tl_gset:Nn \g_nwu_department_tl {#1} }
-\NewDocumentCommand{\SetDate}{m}{ \tl_gset:Nn \g_nwu_date_tl {#1} } % 设置日期接口
+\NewDocumentCommand{\SetDate}{m}{ \tl_gset:Nn \g_nwu_date_tl {#1} }
 
 \SetTerm{2021 ---- 2022~学年第一学期}
 \SetSubject{数学分析}
 \SetPaperType{A}
 \SetDept{数学学院}
-\SetDate{\the\year 年\the\month 月\the\day 日} % 默认当天
+\SetDate{\the\year 年\the\month 月\the\day 日}
 
 \NewDocumentCommand{\MakePaperHeader}{ }{
 \begin{center}
 { \zihao{2} \heiti \bfseries \g_nwu_term_tl } \\
 \vspace{0.8cm}
-
 \renewcommand{\arraystretch}{1.6}
 \begin{tabular}{| p{2.5cm} | p{8cm} | p{1.5cm} | p{2cm} |}
 \hline
@@ -58,7 +97,6 @@
 \hline
 \end{tabular}
 \end{center}
-
 \vspace{0.3cm}
 \noindent \textbf{\underline{注意：答案一律写在答题纸上，否则无效！}}
 \par \vspace{0.5cm}
@@ -84,29 +122,62 @@
 }
 
 \newcommand{\DrawSealedLine}{%
+\bool_if:NT \g_nwu_sealed_bool {
 \AddToShipoutPictureBG{%
+\checkoddpage
+\ifoddpage
 \begin{tikzpicture}[remember~picture, overlay]
-\tikzset{sealed/.style={dashed, color=black!60, line~width=0.8pt}}
-\tikzset{textstyle/.style={rotate=90, anchor=center, color=black}}
+\tikzset{sealed/.style={dashed, color=black, line~width=0.6pt}}
+\tikzset{textstyle/.style={rotate=90, anchor=south, color=black}}
 
-\draw[sealed] ([xshift=1.5cm]current~page.south~west) -- ([xshift=1.5cm]current~page.north~west);
 \draw[sealed] ([xshift=1.8cm]current~page.south~west) -- ([xshift=1.8cm]current~page.north~west);
 
-\node[textstyle] at ([xshift=1.65cm]current~page.west) {
+\node[textstyle] at ([xshift=1.6cm]current~page.west) {
 \zihao{4}\heiti\bfseries \quad 密 \qquad 封 \qquad 线 \quad
 };
-
-\node[textstyle, anchor=east] at ([xshift=1.3cm, yshift=6cm]current~page.west) {
-\zihao{5}\songti 姓~~名：\underline{\makebox[3cm]{}}
+\node[textstyle] at ([xshift=1.2cm, yshift=9cm]current~page.west) {
+\zihao{5}\songti 姓\quad 名：\underline{\makebox[3cm]{}}
 };
-\node[textstyle, anchor=east] at ([xshift=1.3cm, yshift=0cm]current~page.west) {
-\zihao{5}\songti 学~~号：\underline{\makebox[3cm]{}}
+\node[textstyle] at ([xshift=1.2cm, yshift=3cm]current~page.west) {
+\zihao{5}\songti 年\quad 级：\underline{\makebox[3cm]{}}
 };
-\node[textstyle, anchor=east] at ([xshift=1.3cm, yshift=-6cm]current~page.west) {
-\zihao{5}\songti 专~~业：\underline{\makebox[3cm]{}}
+\node[textstyle] at ([xshift=1.2cm, yshift=-3cm]current~page.west) {
+\zihao{5}\songti 院\quad 系：\underline{\makebox[3cm]{}}
+};
+\node[textstyle] at ([xshift=1.2cm, yshift=-9cm]current~page.west) {
+\zihao{5}\songti 学\quad 号：\underline{\makebox[3cm]{}}
+};
+\node[rotate=90, anchor=west, font=\footnotesize] at ([xshift=0.8cm, yshift=-13cm]current~page.west) {
+(请考生在密封线内填写个人信息，密封线外作答无效)
 };
 \end{tikzpicture}%
+\else
+\bool_if:NTF \g_nwu_twoside_bool
+{
+\begin{tikzpicture}[remember~picture, overlay]
+\tikzset{sealed/.style={dashed, color=black, line~width=0.6pt}}
+\tikzset{textstyle/.style={rotate=-90, anchor=south, color=black}} % 文字旋转方向相反
+
+\draw[sealed] ([xshift=-1.8cm]current~page.south~east) -- ([xshift=-1.8cm]current~page.north~east);
+
+\node[textstyle] at ([xshift=-1.6cm]current~page.east) {
+\zihao{4}\heiti\bfseries \quad 密 \qquad 封 \qquad 线 \quad
+};
+\end{tikzpicture}%
+}
+{
+\begin{tikzpicture}[remember~picture, overlay]
+\tikzset{sealed/.style={dashed, color=black, line~width=0.6pt}}
+\tikzset{textstyle/.style={rotate=90, anchor=south, color=black}}
+\draw[sealed] ([xshift=1.8cm]current~page.south~west) -- ([xshift=1.8cm]current~page.north~west);
+\node[textstyle] at ([xshift=1.6cm]current~page.west) {
+\zihao{4}\heiti\bfseries \quad 密 \qquad 封 \qquad 线 \quad
+};
+\end{tikzpicture}%
+}
+\fi
 }%
+}
 }
 \AtBeginDocument{\DrawSealedLine}
 
@@ -128,7 +199,6 @@
 \hbox_set:Nn \l_nwu_choice_b_box { #2 }
 \hbox_set:Nn \l_nwu_choice_c_box { #3 }
 \hbox_set:Nn \l_nwu_choice_d_box { #4 }
-
 \dim_set:Nn \l_nwu_choice_max_width_dim { 0pt }
 \dim_set:Nn \l_nwu_choice_max_width_dim { \dim_max:nn { \l_nwu_choice_max_width_dim } { \box_wd:N \l_nwu_choice_a_box } }
 \dim_set:Nn \l_nwu_choice_max_width_dim { \dim_max:nn { \l_nwu_choice_max_width_dim } { \box_wd:N \l_nwu_choice_b_box } }
@@ -136,7 +206,6 @@
 \dim_set:Nn \l_nwu_choice_max_width_dim { \dim_max:nn { \l_nwu_choice_max_width_dim } { \box_wd:N \l_nwu_choice_d_box } }
 \dim_add:Nn \l_nwu_choice_max_width_dim { 4em }
 \dim_set:Nn \l_nwu_line_width_dim { \linewidth }
-
 \par \addvspace{0.5em} \noindent
 \dim_compare:nNnTF { 4 \l_nwu_choice_max_width_dim } < { \l_nwu_line_width_dim }
 {
@@ -195,11 +264,9 @@
 \refstepcounter{question}
 \fp_set:Nn \l_nwu_current_points_fp { #1 }
 \fp_gadd:Nn \g_nwu_total_points_fp { \l_nwu_current_points_fp }
-
 \fp_compare:nNnTF { \l_nwu_current_points_fp } > { 0 }
 { \seq_gput_right:Ne \g_nwu_score_seq { \fp_to_decimal:N \l_nwu_current_points_fp } }
 { \seq_gput_right:Nn \g_nwu_score_seq { - } }
-
 \par \vspace{0.5em} \noindent
 \textbf{\thequestion .}~
 \ignorespaces
@@ -245,19 +312,13 @@
 
 \ExplSyntaxOff
 
-\ctexset{
-section = {
-number = \chinese{section},
-format = \zihao{4}\bfseries\heiti,
-name = { ,、},
-aftername = {},
-indent = 0pt,
-beforeskip = 1ex,
-afterskip = 1ex
-}
-}
-
 \counterwithin*{question}{section}
+
+\titleformat{\section}
+{\zihao{4}\heiti\bfseries}
+{\chinese{section}、}
+{0em}
+{}
 
 \endinput
 %%

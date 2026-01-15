@@ -36,25 +36,33 @@
 \RequirePackage{expl3}
 \ProvidesExplClass{nwu-exam}{2025/06/01}{0.1}{NWU Exam Class}
 
-% 1. 基础模块
+% =======================================================
+% 1. 基础模块加载
+% =======================================================
 \LoadClass[a4paper,11pt]{article}
 \RequirePackage{geometry}
 \RequirePackage[scheme=plain]{ctex} 
 \RequirePackage{eso-pic}
 \RequirePackage{tikz}
 
-% 关闭 expl3 以适配 TikZ
+% =======================================================
+% 2. 密封线模块 (TikZ)
+% =======================================================
+% 注意：TikZ 绘图需要关闭 expl3 语法，防止 current page 空格被吞
 \ExplSyntaxOff 
 \newcommand{\DrawSealedLine}{%
 	\AddToShipoutPictureBG{%
 		\begin{tikzpicture}[remember picture, overlay]
 		\tikzset{sealed/.style={dashed, color=black!60, line width=0.8pt}}
 		\tikzset{textstyle/.style={rotate=90, anchor=center, color=black}}
+		
 		\draw[sealed] ([xshift=1.5cm]current page.south west) -- ([xshift=1.5cm]current page.north west);
 		\draw[sealed] ([xshift=1.8cm]current page.south west) -- ([xshift=1.8cm]current page.north west);
+		
 		\node[textstyle] at ([xshift=1.65cm]current page.west) {
 			\zihao{4}\heiti\bfseries \quad 密 \qquad 封 \qquad 线 \quad
 		};
+		
 		\node[textstyle, anchor=east] at ([xshift=1.3cm, yshift=6cm]current page.west) {
 			\zihao{5}\songti 姓~~名：\underline{\makebox[3cm]{}}
 		};
@@ -64,15 +72,23 @@
 		\node[textstyle, anchor=east] at ([xshift=1.3cm, yshift=-6cm]current page.west) {
 			\zihao{5}\songti 专~~业：\underline{\makebox[3cm]{}}
 		};
+		
+		\node[rotate=90, anchor=west, font=\footnotesize] at ([xshift=1.2cm, yshift=-13cm]current page.west) {
+			(请考生在密封线内填写个人信息，密封线外作答无效)
+		};
 		\end{tikzpicture}%
 	}%
 }
 \AtBeginDocument{\DrawSealedLine}
+
+% =======================================================
+% 重新开启 Expl3 编程环境 (关键！)
+% =======================================================
 \ExplSyntaxOn
 \msg_new:nnn { nwu-exam } { welcome } { Engine~Online. }
 
 % =======================================================
-% 3. 智能选择题模块 (Smart Choice Module) - V2.0 优化版
+% 3. 智能选择题模块
 % =======================================================
 \dim_new:N \l_nwu_choice_max_width_dim
 \dim_new:N \l_nwu_line_width_dim
@@ -81,89 +97,26 @@
 \box_new:N \l_nwu_choice_c_box
 \box_new:N \l_nwu_choice_d_box
 
-% 定义带缩进的选项打印函数 (Key Fix!)
-% 参数 1: 标签 (A, B...)
-% 参数 2: 内容
-% 参数 3: 宽度 (0pt 表示自动流式布局，用于垂直模式)
 \cs_new_protected:Npn \__nwu_print_item:nnn #1#2#3 {
 	\dim_compare:nNnTF { #3 } = { 0pt }
 	{ 
-		% 垂直排列模式：使用 hanging indent
-		% 模拟列表环境：标签宽 1.5em，标签与内容间距 0.5em
-		\par
-		\noindent
-		\hspace*{2em} % 整体左缩进，对齐中文段落
+		\par \noindent \hspace*{2em} 
 		\makebox[2em][l]{\bfseries #1.} 
 		\parbox[t]{ \linewidth - 4.5em } { #2 } 
-		% 计算说明: 2em(整体缩进) + 2em(标签) + 0.5em(间隙) = 4.5em
 	}
 	{
-		% 水平排列模式 (4列或2列)
 		\makebox[#3][l]{ 
-			\hspace*{2em} % 整体左缩进
-			\makebox[1.5em][l]{\bfseries #1.} #2 
+			\hspace*{2em} \makebox[1.5em][l]{\bfseries #1.} #2 
 		}
 	}
 }
 
 \cs_new_protected:Npn \nwu_choices:nnnn #1#2#3#4 {
-	% 1. 测量
 	\hbox_set:Nn \l_nwu_choice_a_box { #1 }
 	\hbox_set:Nn \l_nwu_choice_b_box { #2 }
 	\hbox_set:Nn \l_nwu_choice_c_box { #3 }
 	\hbox_set:Nn \l_nwu_choice_d_box { #4 }
 	
-	% 2. 计算最大宽度
-	\dim_set:Nn \l_nwu_choice_max_width_dim { 0pt }
-	\dim_set:Nn \l_nwu_choice_max_width_dim { \dim_max:nn { \l_nwu_choice_max_width_dim } { \box_wd:N \l_nwu_choice_a_box } }
-	\dim_set:Nn \l_nwu_choice_max_width_dim { \dim_max:nn { \l_nwu_choice_max_width_dim } { \box_wd:N \l_nwu_choice_b_box } }
-	\dim_set:Nn \l_nwu_choice_max_width_dim { \dim_max:nn { \l_nwu_choice_max_width_dim } { \box_wd:N \l_nwu_choice_c_box } }
-	\dim_set:Nn \l_nwu_choice_max_width_dim { \dim_max:nn { \l_nwu_choice_max_width_dim } { \box_wd:N \l_nwu_choice_d_box } }
-	
-	% 加上标签宽度修正 (2em indent + 1.5em label + 0.5em gap)
-	\dim_add:Nn \l_nwu_choice_max_width_dim { 4em }
-	
-	\dim_set:Nn \l_nwu_line_width_dim { \linewidth }
-	
-	% 3. 布局决策
-	\par \addvspace{0.5em} % 增加题干与选项的间距
-	\noindent
-	\dim_compare:nNnTF { 4 \l_nwu_choice_max_width_dim } < { \l_nwu_line_width_dim }
-	{
-		% Case A: 4列
-		\__nwu_print_item:nnn {A} {#1} {0.25\linewidth}
-		\__nwu_print_item:nnn {B} {#2} {0.25\linewidth}
-		\__nwu_print_item:nnn {C} {#3} {0.25\linewidth}
-		\__nwu_print_item:nnn {D} {#4} {0.25\linewidth}
-	}
-	{
-		\dim_compare:nNnTF { 2 \l_nwu_choice_max_width_dim } < { \l_nwu_line_width_dim }
-		{
-			% Case B: 2列
-			\__nwu_print_item:nnn {A} {#1} {0.5\linewidth}
-			\__nwu_print_item:nnn {B} {#2} {0.5\linewidth} \\ \vspace{0.3em}
-			\__nwu_print_item:nnn {A} {#3} {0.5\linewidth} % 注意: 这里应该是C
-			\__nwu_print_item:nnn {B} {#4} {0.5\linewidth} % 注意: 这里应该是D
-			% 修正标签:
-		}
-		{
-			% Case C: 1列 (垂直)
-			\__nwu_print_item:nnn {A} {#1} {0pt}
-			\__nwu_print_item:nnn {B} {#2} {0pt}
-			\__nwu_print_item:nnn {C} {#3} {0pt}
-			\__nwu_print_item:nnn {D} {#4} {0pt}
-		}
-	}
-	\par \addvspace{0.5em}
-}
-
-% 修正逻辑中的小笔误，并重新定义用户接口
-\cs_set_protected:Npn \nwu_choices:nnnn #1#2#3#4 {
-	% ... (测量代码同上，略) ...
-	\hbox_set:Nn \l_nwu_choice_a_box { #1 }
-	\hbox_set:Nn \l_nwu_choice_b_box { #2 }
-	\hbox_set:Nn \l_nwu_choice_c_box { #3 }
-	\hbox_set:Nn \l_nwu_choice_d_box { #4 }
 	\dim_set:Nn \l_nwu_choice_max_width_dim { 0pt }
 	\dim_set:Nn \l_nwu_choice_max_width_dim { \dim_max:nn { \l_nwu_choice_max_width_dim } { \box_wd:N \l_nwu_choice_a_box } }
 	\dim_set:Nn \l_nwu_choice_max_width_dim { \dim_max:nn { \l_nwu_choice_max_width_dim } { \box_wd:N \l_nwu_choice_b_box } }
@@ -172,8 +125,7 @@
 	\dim_add:Nn \l_nwu_choice_max_width_dim { 4em }
 	\dim_set:Nn \l_nwu_line_width_dim { \linewidth }
 	
-	\par \addvspace{0.5em}
-	\noindent
+	\par \addvspace{0.5em} \noindent
 	\dim_compare:nNnTF { 4 \l_nwu_choice_max_width_dim } < { \l_nwu_line_width_dim }
 	{
 		\__nwu_print_item:nnn {A} {#1} {0.25\linewidth}
@@ -199,39 +151,56 @@
 	\par \addvspace{0.5em}
 }
 
-\NewDocumentCommand{\xx}{ m m m m }{
-	\nwu_choices:nnnn {#1} {#2} {#3} {#4}
-}% =======================================================
-% =======================================================
-% =======================================================
-% 4. 题目与评分模块 (Question & Grading Module) - V2.0
-% =======================================================
+\NewDocumentCommand{\xx}{ m m m m }{ \nwu_choices:nnnn {#1} {#2} {#3} {#4} }
 
-% --- 变量定义 ---
+% =======================================================
+% 4. 题目与评分模块 (含修正后的 \tf 和填空)
+% =======================================================
 \newcounter{question} 
 \newcounter{nwu_part_cnt}[question] 
 \fp_new:N \g_nwu_total_points_fp 
 \fp_new:N \l_nwu_current_points_fp
-
-% 新增：分数序列 (用于存储每道题的分值)
 \seq_new:N \g_nwu_score_seq 
+\bool_new:N \g_nwu_show_answer_bool
+\bool_set_false:N \g_nwu_show_answer_bool 
 
-% --- 题目环境 (question) ---
+% --- 填空题 ---
+\NewDocumentCommand{\fillin}{ O{} O{3cm} }
+{
+	\underline{ \makebox[#2][c]{ \bool_if:NTF \g_nwu_show_answer_bool { \bfseries #1 } { } } }
+	\hspace{0.2em}
+}
+
+% --- 判断题 (已修复：去掉了 m 参数) ---
+\NewDocumentCommand{\tf}{ O{} }{
+	\unskip \nobreak \dotfill 
+	( ~ \makebox[1.5em][c]{
+		\bool_if:NTF \g_nwu_show_answer_bool
+		{
+			\str_case:nnF { #1 }
+			{ {T} { $\checkmark$ } {F} { $\times$ } }
+			{ #1 }
+		}
+		{ } 
+	} ~ )
+}
+
+% --- 解答/证明 ---
+\NewDocumentCommand{\sol}{ }{ \par \noindent \textbf{解：} }
+\NewDocumentCommand{\zm}{ }{ \par \noindent \textbf{证明：} }
+
+% --- 题目环境 ---
 \NewDocumentEnvironment{question}{ O{0} }
 {
 	\refstepcounter{question}
 	\fp_set:Nn \l_nwu_current_points_fp { #1 }
 	\fp_gadd:Nn \g_nwu_total_points_fp { \l_nwu_current_points_fp }
 	
-	% 新增：将当前分数写入序列 (记录下来！)
-	% 如果是0分，为了表格好看，我们也记录为 "-" 或 "0"
 	\fp_compare:nNnTF { \l_nwu_current_points_fp } > { 0 }
 	{ \seq_gput_right:Ne \g_nwu_score_seq { \fp_to_decimal:N \l_nwu_current_points_fp } }
 	{ \seq_gput_right:Nn \g_nwu_score_seq { - } }
 	
-	% 排版逻辑
-	\par \vspace{1em} 
-	\noindent
+	\par \vspace{1em} \noindent
 	\textbf{\thequestion .}~
 	\fp_compare:nNnTF { \l_nwu_current_points_fp } > { 0 }
 	{ \textbf{ ( \fp_to_decimal:N \l_nwu_current_points_fp ~ 分 ) } ~ }
@@ -240,41 +209,37 @@
 }
 { \par }
 
-% --- 小题环境 ---
-\NewDocumentCommand{\qpart}{ }{
+% --- 小题 ---
+\NewDocumentCommand{\qpart}{ O{0} }
+{
 	\stepcounter{nwu_part_cnt}
-	\par \vspace{0.3em}
-	\hspace{2em} (\alph{nwu_part_cnt})~
+	\par \vspace{0.3em} \hspace{2em} 
+	(\alph{nwu_part_cnt})~
+	\fp_set:Nn \l_tmpa_fp { #1 }
+	\fp_compare:nNnTF { \l_tmpa_fp } > { 0 }
+	{
+		\textbf{ ( \fp_to_decimal:N \l_tmpa_fp ~ 分 ) } ~
+		\fp_gadd:Nn \g_nwu_total_points_fp { \l_tmpa_fp }
+	}
+	{ }
 }
 
-% --- 动态得分表生成引擎 (核心算法) ---
+% --- 得分表 ---
 \NewDocumentCommand{\MakeGradingTable}{ }{
 	\par \vspace{2em}
 	\begin{center}
-		% 使用简单的 array 语法，动态计算列数
-		% 结构：| 题号 | 1 | 2 | ... | 总分 |
-		\renewcommand{\arraystretch}{1.5} % 表格行高
-		\setlength{\tabcolsep}{10pt}      % 列宽宽松点
-		
-		% 开始绘制表格
-		% 注意：这里用了一个技巧，先计算有多少道题，生成对应数量的 c|
+		\renewcommand{\arraystretch}{1.5}
+		\setlength{\tabcolsep}{10pt}
 		\begin{tabular}{ | c | *{\seq_count:N \g_nwu_score_seq}{c|} c | }
 			\hline
-			% 第一行：表头 (题号)
 			\textbf{题号} 
-			% 循环输出 1, 2, 3 ...
 			\int_step_inline:nn { \seq_count:N \g_nwu_score_seq } { & \textbf{##1} }
 			& \textbf{总分} \\
 			\hline
-			
-			% 第二行：分值
 			\textbf{分值}
-			% 遍历序列，输出存储的分数
 			\seq_map_inline:Nn \g_nwu_score_seq { & ##1 }
 			& \fp_to_decimal:N \g_nwu_total_points_fp \\
 			\hline
-			
-			% 第三行：得分 (留空给老师打分)
 			\textbf{得分}
 			\int_step_inline:nn { \seq_count:N \g_nwu_score_seq } { & }
 			& \\
@@ -282,5 +247,7 @@
 		\end{tabular}
 	\end{center}
 }
+
+\ExplSyntaxOff
 %</class>
 %    \end{macrocode}

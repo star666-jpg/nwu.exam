@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=latex 2025.10.28)  15 JAN 2026 20:31
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=latex 2025.10.28)  15 JAN 2026 20:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -58,10 +58,10 @@ Generating file(s) ./nwu-exam.cls
 
 
 Processing file nwu-exam.dtx (class) -> nwu-exam.cls
-Lines  processed: 286
-Comments removed: 62
+Lines  processed: 253
+Comments removed: 40
 Comments  passed: 0
-Codelines passed: 220
+Codelines passed: 209
 
 ****************************************************
 * Installation complete. Move nwu-exam.cls to your *
